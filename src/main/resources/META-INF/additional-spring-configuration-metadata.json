@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "pring.freemarker.cache",
+      "type": "java.lang.String",
+      "description": "Description for pring.freemarker.cache."
+    },
+    {
+      "name": "spring.devtools.mvc.servlet.load-on-startup",
+      "type": "java.lang.String",
+      "description": "Description for spring.devtools.mvc.servlet.load-on-startup."
+    }
+  ] }

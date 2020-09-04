@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        #top {
+            width: 1000px;
+            height: 55px;
+            background-color: antiquewhite;
+            text-align: center;
+            margin: 0 auto;
+        }
+        #center {
+            width: 1000px;
+            height: 520px;
+            background-color: cadetblue;
+            text-align: center;
+            margin: 0 auto;
+        }
+        #bottom {
+            width: 1000px;
+            height: 55px;
+            background-color: burlywood;
+            text-align: center;
+            margin: 0 auto;
+        }
+        #center_btn {
+            width: 1000px;
+            height: 30px;
+            float: left;
+            background-color: black;
+        }
+        #center_left {
+            width: 500px;
+            height: 502px;
+            float: left;
+            background-color: cyan;
+        }
+        #showStudentTable {
+            width: 500px;
+            height: 472px;
+            float: left;
+        }
+        #page_btn {
+            width: 500px;
+            height: 30px;
+            float: left;
+        }
+        #center_right {
+            width: 500px;
+            height: 502px;
+            float: left;
+            background-color: coral;
+        }
+        .user_id {
+            color: red;
+        }
+        .operating {
+            width: 110px;
+            height: auto;
+            float: left;
+        }
+
+        .btn_modify {
+            width: 50px;
+            height: auto;
+            float: left;
+            text-align: center;
+            font-size: 15px;
+        }
+        .btn_del {
+            width: 50px;
+            height: auto;
+            float: left;
+            text-align: center;
+            font-size: 15px;
+        }
+        #user_table {
+            font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+            width:100%;
+            border-collapse:collapse;
+        }
+        #user_table td, #user_table th
+        {
+            font-size:1em;
+            border:1px solid #98bf21;
+            padding:3px 7px 2px 7px;
+        }
+
+        #user_table th
+        {
+            font-size:1.1em;
+            text-align:center;
+            padding-top:5px;
+            padding-bottom:4px;
+            background-color:#A7C942;
+            color:#ffffff;
+        }
+
+        #user_table tr.alt td
+        {
+            color:#000000;
+            background-color:#EAF2D3;
+        }
+    </style>
+</head>
+<body>
+<div id="top">
+    <h1 style="font-family: 楷体;">学生管理系统</h1>
+</div>
+<div id="center">
+    <div id="center_btn"></div>
+    <div id="center_left">
+        <div id="showStudentTable">
+        </div>
+        <div id="page_btn">
+            <table>
+                <tr>
+                    <td>第<text id="current"></text>页</td>
+                    <td><button onclick="firstPage()">首页</button></td>
+                    <td>
+                        <button onclick="previousPage()">上一页</button>
+                    </td>
+                    <td><button onclick="nextPage()">下一页</button></td>
+                    <td>
+                        <button onclick="tail()">尾页</button>
+                    </td>
+                    <td>共<text id="pages"></text>页</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="center_right"></div>
+</div>
+<div id="bottom"></div>
+</body>
+<script src="/js/jquery-3.5.1.min.js"></script>
+<script>
+    window.onload = function(){
+        getStu(1);
+    };
+    function getStu(current) {
+        $(function() {
+            $.ajax({
+                type: "GET",
+                // 设置提交的数据类型格式
+                contentType: "text",
+                // 请求成功返回的数据类型格式
+                dataType: "json",
+                //请求地址
+                url: "/user/selectUserPage?current="+current+"&size=13",
+                // 提交数据
+                data : "",
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                    setStu(result);
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+        });
+    }
+    function del(id) {
+            /*
+            1，ajax ContentType的默认值为:application/x-www-form-urlencoded;charset=UTF-8
+                此格式为表单提交格式，数据为key1=value1&key2=value2的格式。后台只需要定义对象或者参数就行了，会自动映射。
+            2，Controller使用@RequstBody注解（接收一个json对象），ajax contentType需要值：application/json; charset=UTF-8。
+                ajax date需要把JSON字符串序列化成JSON对象.如 data:JSON.stringify(jsonString)
+             */
+            $.ajax({
+                type: "POST",
+                // 设置提交的数据类型格式
+             // contentType: "application/json;charset=utf-8",
+                // 请求成功返回的数据类型格式
+                dataType: "text",
+                //请求地址
+                url: "/user/delUser",
+                // 提交数据
+                data : {id:id},
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+    }
+    function update(id) {
+
+    }
+    function previousPage() {
+        var current = document.getElementById("current").innerText;
+        var page = current -1;
+        if (page === 0) {
+           // alert("当前第一页")
+        } else {
+            getStu(current-1);
+        }
+    }
+    function nextPage() {
+        var pages = document.getElementById("pages").innerText;
+        var current = document.getElementById("current").innerText;
+        if (pages === current) {
+           // alert("最后一页");
+        } else {
+            var page = parseInt(current) + 1;
+            getStu(page);
+        }
+    }
+    function firstPage() {
+        getStu(1);
+    }
+    function tail() {
+        var pages = document.getElementById("pages").innerText;
+        getStu(pages);
+    }
+    function setStu(result) {
+        var herd  = "<table id='user_table'><tr><th>ID</th><th>name</th><th>password</th><th>email</th><th>operating</th></tr>";
+        var table = "";
+        document.getElementById("current").innerText = result.current;
+        document.getElementById("pages").innerText = result.pages;
+        $.each(result.records,function (index,object) {
+            var str = "<tr><td id=user_id>"+object.id+"</td><td id=user_name>"+object.name+"</td><td id=user_password>"+object.password+"</td><td id=user_email>"+object.email+"</td>" +
+                "          <td id=operating>" +
+                "          <button class='btn_modify' onclick='update("+object.id+")'>修改</button>" +
+                "          <button class='btn_del' onclick='del("+object.id+")'>删除</button>" +
+                "          </td>" +
+                "        </tr>";
+            table += str;
+        });
+        var html = herd + table + "</table>";
+        document.getElementById("showStudentTable").innerHTML = html;
+    }
+
+    /*
+       这个方法可以用于展示数据。
+       构建 table 优雅的遍历数据，但是不适合翻页。
+     */
+    function f() {
+        // 构建 table 优雅的遍历数据。
+        var table = document.getElementById("user_table");
+        var row = table.insertRow(table.rows.length);
+        var id = row.insertCell(0);
+        id.innerText = object.id;
+        id.className = "user_id";
+        var name = row.insertCell(1).innerText = object.name;
+        name.className = "user_name";
+        var pwd = row.insertCell(2).innerText = object.password;
+        pwd.className = "user_password";
+        var email = row.insertCell(3);
+        email.className = "user_email";
+        if (typeof (object.email) == "undefined") {
+            email.innerText = "";
+        } else {
+            email.innerText = object.email;
+        }
+        var operating = row.insertCell(4);
+        operating.innerHTML = "<button class='btn_modify' onclick='update("+object.id+")'>修改</button><button class='btn_del' onclick='del("+object.id+")'>删除</button>";
+        operating.className = "operating";
+    }
+
+</script>
+</html>

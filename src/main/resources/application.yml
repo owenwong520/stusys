@@ -1,0 +1,32 @@
+server:
+  # 项目端口
+  port: 8081
+spring:
+  # 配置连接数据库
+  datasource:
+    username: root
+    password: 1234
+    url: jdbc:mysql://localhost:3306/stusys?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # 禁用缓存
+  thymeleaf:
+    cache: false
+  #热部署，当指定目录下有变化，执行热部署。
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+  # 初始化 dispatcherServlet
+  mvc:
+    servlet:
+      load-on-startup: 0
+    #默认配置会自动在 /public /static /resources 目录寻找静态资源, 引用时不需要 /static 等前缀
+    static-path-pattern: /**
+
+logging:
+  # 执行sql语句在控制台显示。
+  level:
+    com.example.demo.dao: debug
+
+
