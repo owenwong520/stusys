@@ -7,4 +7,3 @@
 
 2，@ResponseBody是作用在方法上的，
     @ResponseBody 表示该方法的返回结果直接写入 HTTP response body 中，一般在异步获取数据时使用（也就是AJAX）。
-
