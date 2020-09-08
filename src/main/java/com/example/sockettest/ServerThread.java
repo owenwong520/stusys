@@ -17,7 +17,7 @@ public class ServerThread extends Thread{
         try {
             InputStream inputStream = socket.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);// 通过标准流来读取数据
 
             String temp = null;
             String info = "";
@@ -25,7 +25,6 @@ public class ServerThread extends Thread{
                 info += temp;
                 System.out.println("已接收到客户端连接");
                 System.out.println("客户端信息："+info+",  客户端ip:"+socket.getInetAddress().getHostAddress());
-
             }
             OutputStream outputStream = socket.getOutputStream();
             PrintWriter printWriter = new PrintWriter(outputStream);

@@ -9,7 +9,6 @@ public class Server {
         try {
             ServerSocket serverSocket = new ServerSocket(8080);
             System.out.println("服务器启动，等待连接...");
-
             while (true) {
                 Socket socket = serverSocket.accept();
                 ServerThread serverThread = new ServerThread(socket);
