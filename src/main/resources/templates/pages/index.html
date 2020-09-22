@@ -145,7 +145,6 @@
         getStu(1);
     };
     function getStu(current) {
-        $(function() {
             $.ajax({
                 type: "GET",
                 // 设置提交的数据类型格式
@@ -166,8 +165,8 @@
                     console.log(e);
                 }
             });
-        });
-    }
+        };
+
     function del(id) {
             /*
             1，ajax ContentType的默认值为:application/x-www-form-urlencoded;charset=UTF-8
@@ -175,6 +174,8 @@
             2，Controller使用@RequstBody注解（接收一个json对象），ajax contentType需要值：application/json; charset=UTF-8。
                 ajax date需要把JSON字符串序列化成JSON对象.如 data:JSON.stringify(jsonString)
              */
+        if (confirm("确定删除？")) {
+            var current = document.getElementById("current").innerText;
             $.ajax({
                 type: "POST",
                 // 设置提交的数据类型格式
@@ -188,15 +189,19 @@
                 //请求成功
                 success: function (result) {
                     console.log(result);
+                    getStu(current);
                 },
                 //请求失败，包含具体的错误信息
                 error: function (e) {
                     console.log(e);
                 }
             });
+        } else {
+
+        }
     }
     function update(id) {
-
+        console.log(id);
     }
     function previousPage() {
         var current = document.getElementById("current").innerText;
@@ -224,6 +229,9 @@
         var pages = document.getElementById("pages").innerText;
         getStu(pages);
     }
+    /*
+        使用js构建table表格
+    */
     function setStu(result) {
         var herd  = "<table id='user_table'><tr><th>ID</th><th>name</th><th>password</th><th>email</th><th>operating</th></tr>";
         var table = "";
