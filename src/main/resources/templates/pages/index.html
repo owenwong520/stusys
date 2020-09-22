@@ -201,7 +201,25 @@
         }
     }
     function update(id) {
-        console.log(id);
+        $.ajax({
+            type: "post",
+            // 设置提交的数据类型格式
+            // contentType: "application/json;charset=utf-8",
+            // 请求成功返回的数据类型格式
+            dataType: "text",
+            //请求地址
+            url: "/jumpupdate",
+            // 提交数据
+            data : {id:id},
+            //请求成功
+            success: function (result) {
+                console.log(result);
+            },
+            //请求失败，包含具体的错误信息
+            error: function (e) {
+                console.log(e);
+            }
+        });
     }
     function previousPage() {
         var current = document.getElementById("current").innerText;

@@ -55,6 +55,14 @@ public class UserController {
         }
     }
 
+    @PostMapping("/update")
+    public void updateUser(HttpServletResponse response,UserEntity user) {
+        if (userService.updateUser(user) > 0) {
+            OutputInfo(response,"修改成功");
+        } else {
+            OutputInfo(response,"修改失败");
+        }
+    }
     private void OutputInfo(HttpServletResponse response,String outData) {
         response.setCharacterEncoding("utf-8");
         PrintWriter out = null;

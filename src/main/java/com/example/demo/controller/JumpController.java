@@ -8,6 +8,14 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 @Controller
 public class JumpController {
@@ -36,7 +44,6 @@ public class JumpController {
             user.setPassword("a786"+i);
             user.setEmail(i+"@qq.com");
           //  userService.addUser(user);
-
         }
 
         //userService.selectByNameLike("");
@@ -45,5 +52,17 @@ public class JumpController {
         userEntity.setPassword("a7862");
        // loginService.login(userEntity);
         return "pages/index.html";
+    }
+
+    @RequestMapping("/jumpupdate")
+    public ModelAndView jumpUpdate(HttpServletResponse response, String id) {
+        UserEntity user = new UserEntity();
+        user.setId(Integer.parseInt(id));
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(userService.selectUserById(user));
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("pages/modify.html");
+        modelAndView.addObject("user", gson.toJson(jsonStr));
+        return modelAndView;
     }
 }
