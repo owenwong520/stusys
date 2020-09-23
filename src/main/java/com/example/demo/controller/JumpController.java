@@ -7,6 +7,7 @@ import com.example.demo.service.Impl.UserServiceImpl;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,15 +55,13 @@ public class JumpController {
         return "pages/index.html";
     }
 
-    @RequestMapping("/jumpupdate")
-    public ModelAndView jumpUpdate(HttpServletResponse response, String id) {
+    @GetMapping("/jumpupdate")
+    public String jumpUpdate(ModelMap map, String id) {
         UserEntity user = new UserEntity();
         user.setId(Integer.parseInt(id));
         Gson gson = new Gson();
         String jsonStr = gson.toJson(userService.selectUserById(user));
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("pages/modify.html");
-        modelAndView.addObject("user", gson.toJson(jsonStr));
-        return modelAndView;
+        map.put("user",jsonStr);
+        return "pages/modify.html";
     }
 }
