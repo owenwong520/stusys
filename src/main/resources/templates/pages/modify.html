@@ -2,26 +2,86 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>资料修改</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            width: 1000px;
+            height: auto;
+            margin: auto;
+        }
+        #top {
+            width: 1000px;
+            height: 80px;
+            float: left;
+            background-color: #98bf21;
+        }
+        #mail {
+            width: 1000px;
+            height: 600px;
+            float: left;
+        }
+        #updateForm {
+            float: left;
+        }
+    </style>
 </head>
 <body>
-<form action="/user/update" method="post">
-    id:<input name="id" type="text">
-    name:<input name="name" type="text">
-    password:<input name="password" type="password">
-    email:<input name="email" type="email">
-    <input type="submit" value="提交">
-</form>
+<div id="top"></div>
+<div id="mail">
+    <form id="updateForm" name="updateForm" method="post">
+        id:<input id="id" name="id" type="text"  readonly ><br>
+        name:<input id="name" name="name" type="text"><br>
+        password:<input id="password" name="password" type="text"><br>
+        email:<input id="email" name="email" type="email"><br>
+        <input type="button" onclick="update()" value="提交"><br>
+        <input id="result" type="text" disabled="disabled"  style="display:none">
+    </form>
+</div>
 </body>
-
+<script src="/js/jquery-3.5.1.min.js"></script>
 <script type="text/javascript"  th:inline="javascript">
     window.onload = function(){
         showList();
+
     };
     function showList() {
        // debugger
         var temp = [[${user}]];//报错
         console.log("temp---"+temp);
+        var jsonUser = JSON.parse(temp);
+        document.getElementById("id").value = jsonUser.id;
+        document.getElementById("name").value = jsonUser.name;
+        document.getElementById("password").value = jsonUser.password;
+        document.getElementById("email").value = jsonUser.email;
     }
+    function update() {
+       // alert($("#updateForm").serialize());
+        $.ajax({
+            type: "POST",
+            // 设置提交的数据类型格式
+            // contentType: "application/json;charset=utf-8",
+            // 请求成功返回的数据类型格式
+            dataType: "text",
+            //请求地址
+            url: "/user/update",
+            // 提交数据
+            data : $("#updateForm").serialize(),// 序列化form表单，提交到后台。
+            //请求成功
+            success: function (result) {
+                console.log(result);
+                document.getElementById("result").value = result;
+                $("#result").show();
+            },
+            //请求失败，包含具体的错误信息
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    }
+
 </script>
 </html>

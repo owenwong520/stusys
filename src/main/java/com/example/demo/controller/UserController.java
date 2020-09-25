@@ -57,6 +57,7 @@ public class UserController {
 
     @PostMapping("/update")
     public void updateUser(HttpServletResponse response,UserEntity user) {
+        System.out.println(user.toString());
         if (userService.updateUser(user) > 0) {
             OutputInfo(response,"修改成功");
         } else {
