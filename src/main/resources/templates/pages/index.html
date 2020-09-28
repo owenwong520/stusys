@@ -33,7 +33,6 @@
             width: 1000px;
             height: 30px;
             float: left;
-            background-color: black;
         }
         #center_left {
             width: 500px;
@@ -114,7 +113,11 @@
     <h1 style="font-family: 楷体;">学生管理系统</h1>
 </div>
 <div id="center">
-    <div id="center_btn"></div>
+    <div id="center_btn">
+        <form action="/addUser" method="get">
+            <input type="submit" value="添加信息">
+        </form>
+    </div>
     <div id="center_left">
         <div id="showStudentTable">
         </div>

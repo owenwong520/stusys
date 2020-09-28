@@ -64,4 +64,8 @@ public class JumpController {
         map.put("user",jsonStr);
         return "pages/modify.html";
     }
+    @GetMapping("/addUser")
+    public String addUser() {
+        return "pages/add.html";
+    }
 }
