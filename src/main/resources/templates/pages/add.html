@@ -3,13 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>添加信息</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0 auto;
+        }
+        body {
+            width: 960px;
+            height: 650px;
+            background-color: cyan;
+        }
+        #top {
+            width: 960px;
+            height: 60px;
+            background-color: #98bf21;
+        }
+        #center {
+            width: 960px;
+            height: 500px;
+            background-color: coral;
+        }
+        #bottom {
+            width: 960px;
+            height: 50px;
+            background-color: burlywood;
+        }
+    </style>
 </head>
 <body>
-<form id="updateForm" name="updateForm" action="/user/addUser" method="post">
-    name:<input id="name" name="name" type="text"><br>
-    password:<input id="password" name="password" type="text"><br>
-    email:<input id="email" name="email" type="email"><br>
-    <input type="submit" value="提交"><br>
-</form>
+<div id="box">
+<div id="top">
+    <h3>添加用户</h3>
+</div>
+<div id="center">
+    <form id="updateForm" name="updateForm" action="/user/addUser" method="post">
+        name:<input id="name" name="name" type="text"><br>
+        password:<input id="password" name="password" type="text"><br>
+        email:<input id="email" name="email" type="email"><br>
+        <input type="submit" value="提交"><br>
+    </form>
+</div>
+<div id="bottom"></div>
+</div>
 </body>
 </html>
