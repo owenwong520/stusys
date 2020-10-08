@@ -28,7 +28,7 @@ public class UserController {
     }
     @PostMapping("/addUser")
     public void addUser(HttpServletResponse response, UserEntity user) {
-        if (userService.addUser(user)> 0) {
+        if (userService.addUser(user) > 0) {
             OutputInfo(response,"add success");
         } else {
             OutputInfo(response,"add failed");

@@ -31,7 +31,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
         int i = 0;
         if (!"".equals(user.getName()) && user.getName() != null &&
                 !"".equals(user.getPassword()) && user.getPassword() != null) {
-            userDao.insert(user);
+           i = userDao.insert(user);
         }
         return i;
     }
