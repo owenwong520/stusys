@@ -306,13 +306,28 @@
             //请求成功
             success: function (result) {
                 console.log(result);
-               // setStu(result);
+                showUser(result);
             },
             //请求失败，包含具体的错误信息
             error: function (e) {
                 console.log(e);
             }
         });
+    }
+    function showUser(result) {
+        var herd  = "<table id='user_table'><tr><th>ID</th><th>name</th><th>password</th><th>email</th><th>operating</th></tr>";
+        var table = "";
+        $.each(result,function (index,object) {
+            var str = "<tr><td id=user_id>"+object.id+"</td><td id=user_name>"+object.name+"</td><td id=user_password>"+object.password+"</td><td id=user_email>"+object.email+"</td>" +
+                "          <td id=operating>" +
+                "          <button class='btn_modify' onclick='update("+object.id+")'>修改</button>" +
+                "          <button class='btn_del' onclick='del("+object.id+")'>删除</button>" +
+                "          </td>" +
+                "        </tr>";
+            table += str;
+        });
+        var html = herd + table + "</table>";
+        document.getElementById("right_showSelectUser").innerHTML = html;
     }
 </script>
 </html>
