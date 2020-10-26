@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -57,13 +59,22 @@ public class UserController {
 
     @PostMapping("/update")
     public void updateUser(HttpServletResponse response,UserEntity user) {
-        System.out.println(user.toString());
+       // System.out.println(user.toString());
         if (userService.updateUser(user) > 0) {
             OutputInfo(response,"修改成功");
         } else {
             OutputInfo(response,"修改失败");
         }
     }
+    @ResponseBody
+    @GetMapping("/selectUser")
+    public String selectUser(String name) {
+        List<UserEntity> list = userService.selectByNameLike(name);
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(list);
+        return jsonStr;
+    }
+
     private void OutputInfo(HttpServletResponse response,String outData) {
         response.setCharacterEncoding("utf-8");
         PrintWriter out = null;

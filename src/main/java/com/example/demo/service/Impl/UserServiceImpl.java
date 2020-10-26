@@ -85,9 +85,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
     public List<UserEntity> selectByNameLike(String str) {
         List<UserEntity> list = new ArrayList<>();
         QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("name","");
+        queryWrapper.like("name",str);
         list = userDao.selectList(queryWrapper);
-        System.out.println(list.toString());
+      //  System.out.println(list.toString());
         return list;
     }
 }
