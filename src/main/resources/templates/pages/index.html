@@ -34,6 +34,16 @@
             height: 30px;
             float: left;
         }
+        #center_addUser {
+            width: 300px;
+            height: 30px;
+            float: left;
+        }
+        #center_selectUser {
+            width: 300px;
+            height: 30px;
+            float: left;
+        }
         #center_left {
             width: 500px;
             height: 502px;
@@ -54,6 +64,7 @@
             width: 500px;
             height: 502px;
             float: left;
+            margin: 0 auto;
             background-color: coral;
         }
         .user_id {
@@ -116,6 +127,11 @@
             height: 470px;
             float: left;
         }
+        #select_btn {
+            width: 500px;
+            height: 30px;
+            float: left;
+        }
     </style>
 </head>
 <body>
@@ -124,10 +140,14 @@
 </div>
 <div id="center">
     <div id="center_btn">
-        <form action="/addUser" method="get">
-            <input type="submit" value="添加信息">
-        </form>
+        <div id="center_addUser">
+            <form action="/addUser" method="get">
+                <input type="submit" value="添加信息">
+            </form>
+        </div>
+        <div id="center_selectUser">查询:<input id="selectName" name="selectName" type="text"><button onclick="selectUser()">查询</button></div>
     </div>
+
     <div id="center_left">
         <div id="showStudentTable">
         </div>
@@ -149,8 +169,23 @@
         </div>
     </div>
     <div id="center_right">
-        <div id="right_selectName">查询:<input id="selectName" name="selectName" type="text"><button onclick="selectUser()">查询</button></div>
         <div id="right_showSelectUser"></div>
+        <div id="select_btn">
+            <table>
+                <tr>
+                    <td>第<text id="select_current"></text>页</td>
+                    <td><button onclick="select_firstPage()">首页</button></td>
+                    <td>
+                        <button onclick="select_previousPage()">上一页</button>
+                    </td>
+                    <td><button onclick="select_nextPage()">下一页</button></td>
+                    <td>
+                        <button onclick="select_tail()">尾页</button>
+                    </td>
+                    <td>共<text id="select_pages"></text>页</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 <div id="bottom"></div>
@@ -291,6 +326,7 @@
         operating.innerHTML = "<button class='btn_modify' onclick='update("+object.id+")'>修改</button><button class='btn_del' onclick='del("+object.id+")'>删除</button>";
         operating.className = "operating";
     }
+    var selectList;
     function selectUser() {
         var name = document.getElementById("selectName").value;
         $.ajax({
@@ -305,8 +341,9 @@
             data : "",
             //请求成功
             success: function (result) {
+                selectList = result;
                 console.log(result);
-                showUser(result);
+                showUser(1,result);
             },
             //请求失败，包含具体的错误信息
             error: function (e) {
@@ -314,20 +351,76 @@
             }
         });
     }
-    function showUser(result) {
+    function showUser(current,selectList) {
         var herd  = "<table id='user_table'><tr><th>ID</th><th>name</th><th>password</th><th>email</th><th>operating</th></tr>";
         var table = "";
-        $.each(result,function (index,object) {
-            var str = "<tr><td id=user_id>"+object.id+"</td><td id=user_name>"+object.name+"</td><td id=user_password>"+object.password+"</td><td id=user_email>"+object.email+"</td>" +
-                "          <td id=operating>" +
-                "          <button class='btn_modify' onclick='update("+object.id+")'>修改</button>" +
-                "          <button class='btn_del' onclick='del("+object.id+")'>删除</button>" +
-                "          </td>" +
-                "        </tr>";
-            table += str;
-        });
+        var pages;
+        var current = current - 1;
+        document.getElementById("select_current").innerText = current+1;
+        var onePagesSize = 12;
+        var resultLength = selectList.length;
+        var lastPageSize ;
+        var index = current*onePagesSize;
+        var indexEnd = index + onePagesSize;
+        if (resultLength > onePagesSize && resultLength % onePagesSize === 0) {
+            pages = resultLength/onePagesSize;
+        } else if (resultLength > onePagesSize){
+            pages = parseInt(resultLength/onePagesSize)+1;
+            lastPageSize = resultLength % onePagesSize;
+        } else {
+            pages = 1;
+        }
+        console.log("resultLength:"+resultLength+"index:"+index+"pages:"+pages+"current:"+current+"lastPageSize:"+lastPageSize);
+        document.getElementById("select_pages").innerText = pages;
+        if (resultLength > onePagesSize && current+1 < pages) {
+            for (; index <= indexEnd; index++) {
+                table += getUserPage(index, selectList);
+            }
+        } else {
+            if (lastPageSize > 0) {
+                var index = resultLength - lastPageSize;
+                for (; index < resultLength; index++) {
+                    table += getUserPage(index,selectList);
+                }
+            } else {
+                for (var index = 0; index < resultLength; index++) {
+                    table += getUserPage(index,selectList);
+                }
+            }
+        }
         var html = herd + table + "</table>";
         document.getElementById("right_showSelectUser").innerHTML = html;
+    }
+
+    function getUserPage(numberIndex, result) {
+        var index = parseInt(numberIndex);
+        var str = "<tr><td id=user_id>"+result[index].id+"</td><td id=user_name>"+result[index].name+"</td><td id=user_password>"+result[index].password+"</td><td id=user_email>"+result[index].email+"</td>" +
+            "          <td id=operating>" +
+            "          <button class='btn_modify' onclick='update("+result[index].id+")'>修改</button>" +
+            "          <button class='btn_del' onclick='del("+result[index].id+")'>删除</button>" +
+            "          </td>" +
+            "        </tr>";
+        return str;
+    }
+
+    function select_nextPage() {
+        var current = parseInt(document.getElementById("select_current").innerText);
+        var pages = parseInt(document.getElementById("select_pages").innerText);
+        if (current === pages) {
+            alert("最后一页");
+        } else {
+            showUser(parseInt(current) + 1,selectList);
+        }
+
+    }
+    function select_previousPage() {
+        var current = document.getElementById("select_current").innerText;
+        if (parseInt(current) === 1) {
+            alert("当前在首页");
+        } else {
+            showUser(parseInt(current-1),selectList);
+        }
+
     }
 </script>
 </html>
