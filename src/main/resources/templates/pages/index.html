@@ -219,12 +219,12 @@
         };
 
     function del(id) {
-            /*
-            1，ajax ContentType的默认值为:application/x-www-form-urlencoded;charset=UTF-8
-                此格式为表单提交格式，数据为key1=value1&key2=value2的格式。后台只需要定义对象或者参数就行了，会自动映射。
-            2，Controller使用@RequstBody注解（接收一个json对象），ajax contentType需要值：application/json; charset=UTF-8。
-                ajax date需要把JSON字符串序列化成JSON对象.如 data:JSON.stringify(jsonString)
-             */
+        /*
+        1，ajax ContentType的默认值为:application/x-www-form-urlencoded;charset=UTF-8
+            此格式为表单提交格式，数据为key1=value1&key2=value2的格式。后台只需要定义对象或者参数就行了，会自动映射。
+        2，Controller使用@RequstBody注解（接收一个json对象），ajax contentType需要值：application/json; charset=UTF-8。
+            ajax date需要把JSON字符串序列化成JSON对象.如 data:JSON.stringify(jsonString)
+         */
         if (confirm("确定删除？")) {
             var current = document.getElementById("current").innerText;
             $.ajax({
@@ -326,8 +326,13 @@
         operating.innerHTML = "<button class='btn_modify' onclick='update("+object.id+")'>修改</button><button class='btn_del' onclick='del("+object.id+")'>删除</button>";
         operating.className = "operating";
     }
-    var selectList;
+
+    /*
+    以下代码功能是查询用户并显示在页面上；
+     */
+    var selectList; // 用于存储查询到的用户数据；
     function selectUser() {
+        // 使用ajax 异步查询用户
         var name = document.getElementById("selectName").value;
         $.ajax({
             type: "GET",
@@ -351,47 +356,56 @@
             }
         });
     }
+    // 主要用于查询到的数据显示和翻页。
     function showUser(current,selectList) {
+        // 构建table的标题头。
         var herd  = "<table id='user_table'><tr><th>ID</th><th>name</th><th>password</th><th>email</th><th>operating</th></tr>";
         var table = "";
         var pages;
-        var current = current - 1;
+        var current = current - 1; // 当前页减一，用于计算出当前页需要的数据。
         document.getElementById("select_current").innerText = current+1;
-        var onePagesSize = 12;
-        var resultLength = selectList.length;
-        var lastPageSize ;
-        var index = current*onePagesSize;
-        var indexEnd = index + onePagesSize;
+        var onePagesSize = 12; // 页面显示数量：一页显示多少条数据
+        var resultLength = selectList.length; // 总共有多少条数据
+        var lastPageSize ; // 记录取模运算后最后一页有多少条数据
+        var index = current*onePagesSize; // 计算出当前页面需要显示的第一条数据的下标值
+        var indexEnd = index + onePagesSize; // 计算出当前页面需要显示的最后一条数据的下标值
+        // 如果用户总数大于页面显示数量并且用户总数能与页面显示数量整除，则直接计算出总的页数。
         if (resultLength > onePagesSize && resultLength % onePagesSize === 0) {
             pages = resultLength/onePagesSize;
         } else if (resultLength > onePagesSize){
+            // 否则如果用户总数大于显示数量，则用户总数除以单页显示数量，并取整加一，得到总页数；
             pages = parseInt(resultLength/onePagesSize)+1;
-            lastPageSize = resultLength % onePagesSize;
+            lastPageSize = resultLength % onePagesSize; // 取模运算记录最后一页有多少条数据。
         } else {
+            // 如果用户总数不大于页面显示数量，那么就只有一页。
             pages = 1;
         }
         console.log("resultLength:"+resultLength+"index:"+index+"pages:"+pages+"current:"+current+"lastPageSize:"+lastPageSize);
-        document.getElementById("select_pages").innerText = pages;
+        document.getElementById("select_pages").innerText = pages; // 将计算出的总页数赋值到页面。
+        // 如果用户数量大于页面显示数量且当前页小于总页数：意思就是当前页不是最后一页。就使用下标控制读取selectList的数据；
         if (resultLength > onePagesSize && current+1 < pages) {
             for (; index <= indexEnd; index++) {
-                table += getUserPage(index, selectList);
+                table += getUserPage(index, selectList); // 构建表格
             }
         } else {
+            // 如果最后一页不够单页显示数量，则单独构建表格。
             if (lastPageSize > 0) {
                 var index = resultLength - lastPageSize;
                 for (; index < resultLength; index++) {
                     table += getUserPage(index,selectList);
                 }
             } else {
+                // 否则就是当前只有一页，直接显示用户全部条数。
                 for (var index = 0; index < resultLength; index++) {
                     table += getUserPage(index,selectList);
                 }
             }
         }
-        var html = herd + table + "</table>";
-        document.getElementById("right_showSelectUser").innerHTML = html;
+        var html = herd + table + "</table>"; // 构建表格尾部
+        document.getElementById("right_showSelectUser").innerHTML = html; // 将构建的表格显示到html.
     }
 
+    // 用户构建表格
     function getUserPage(numberIndex, result) {
         var index = parseInt(numberIndex);
         var str = "<tr><td id=user_id>"+result[index].id+"</td><td id=user_name>"+result[index].name+"</td><td id=user_password>"+result[index].password+"</td><td id=user_email>"+result[index].email+"</td>" +
@@ -411,7 +425,6 @@
         } else {
             showUser(parseInt(current) + 1,selectList);
         }
-
     }
     function select_previousPage() {
         var current = document.getElementById("select_current").innerText;
@@ -420,7 +433,6 @@
         } else {
             showUser(parseInt(current-1),selectList);
         }
-
     }
 </script>
 </html>
